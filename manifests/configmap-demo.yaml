@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+  namespace: development
+data:
+  APP_NAME: "My Cool App"
+  ENVIRONMENT: "development"
+  LOG_LEVEL: "debug"
+  MAX_CONNECTIONS: "100"

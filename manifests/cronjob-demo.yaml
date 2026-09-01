@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-job
+  namespace: development
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cleanup
+            image: busybox
+            command: ['sh', '-c']
+            args:
+              - |
+                echo "Cleanup started at $(date)"
+                echo "Removing old temp files..."
+                sleep 3
+                echo "Cleanup done"
+          restartPolicy: Never

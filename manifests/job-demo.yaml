@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-import
+  namespace: development
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - name: importer
+        image: busybox
+        command: ["sh",  "-c"]
+        args:
+          - |
+            echo "Step 1: Connecting to database..."
+            sleep 2
+            echo "Step 2: Importing 1000 records..."
+            sleep 3
+            echo "Step 3: Verifying data..."
+            sleep 1
+            echo "Import Completed! 1000 records imported"
+      restartPolicy: Never
