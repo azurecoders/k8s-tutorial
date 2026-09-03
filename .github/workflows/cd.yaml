@@ -1,0 +1,33 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to Minikube
+    runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Minikube
+        run: |
+          # Make sure minikube is running
+          minikube status
+
+          kubectl set image deployment/myapp \
+            myapp=ghcr.io/${{ github.repository }}/myapp:${{ github.sha }} \
+            -n myapp-prod
+
+          kubectl rollout status deployment/myapp -n myapp-prod --timeout=120s
+
+          kubectl get pods -n myapp-prod
+
+          echo "✅ Deployment successful!"
