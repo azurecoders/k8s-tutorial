@@ -1,0 +1,19 @@
+name: Hello World Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Hello
+        run: echo "Hello! This is my first CI/CD pipeline!"
+
+      - name: Show OS info
+        run: uname -a
+
+      - name: Show Node version
+        run: node --version
