@@ -9,7 +9,12 @@ spec:
   template:
     spec:
       containers:
-      - name: worker
-        image: busybox
-        command: ["sh",  "-c", 'echo "Worker $(hostname) processing..." && sleep 2 && echo echo "Done"']
+        - name: worker
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              'echo "Worker $(hostname) processing..." && sleep 2 && echo echo "Done"',
+            ]
       restartPolicy: Never

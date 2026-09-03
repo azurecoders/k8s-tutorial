@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-app
+      role: frontend
+  template:
+    metadata:
+      labels:
+        app: web-app
+        role: frontend
+    spec:
+      containers:
+        - name: web-app
+          image: myapp:2.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            - name: APP_NAME
+              value: "WebApp"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+      role: db
+  template:
+    metadata:
+      labels:
+        app: database
+        role: db
+    spec:
+      containers:
+        - name: database
+          image: myapp:2.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            - name: APP_NAME
+              value: "Database"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app-svc
+  namespace: development
+spec:
+  selector:
+    app: web-app
+  ports:
+    - port: 80
+      targetPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-svc
+  namespace: development
+spec:
+  selector:
+    app: database
+  ports:
+    - port: 5432
+      targetPort: 3000

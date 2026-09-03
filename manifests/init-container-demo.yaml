@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fake-db
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fake-db
+  template:
+    metadata:
+      labels:
+        app: fake-db
+    spec:
+      containers:
+        - name: fake-db
+          image: myapp:2.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            - name: APP_NAME
+              value: "FakeDB"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fake-db-service
+  namespace: development
+spec:
+  selector:
+    app: fake-db
+  ports:
+    - port: 5432
+      targetPort: 3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-with-init
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-with-init
+  template:
+    metadata:
+      labels:
+        app: app-with-init
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "Waiting for database at fake-db-service:5432..."
+              until nc -z fake-db-service 5432; do
+                echo "  Database not ready. Retrying in 2 seconds..."
+                sleep 2
+              done
+              echo "Database is ready!"
+
+        - name: setup-dirs
+          image: busybox
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "Creating directories"
+              mkdir -p /shared-data/logs
+              mkdir -p /shared-data/uploads
+              echo "Directories created"
+          volumeMounts:
+            - mountPath: /shared-data
+              name: shared-data
+      containers:
+        - name: app-with-init
+          image: myapp:2.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            - name: APP_NAME
+              value: "App with Init"
+          volumeMounts:
+            - mountPath: /shared-data
+              name: shared-data
+
+      volumes:
+        - name: shared-data
+          emptyDir: {}
