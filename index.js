@@ -17,6 +17,12 @@ app.get("/", (req, res) => {
 app.get("/health", (req, res) => res.json({ status: "healthy" }));
 app.get("/ready", (req, res) => res.json({ status: "ready" }));
 
+app.get("/users", (req, res) => {
+  res.json({
+    users: ["Alice", "Bob"],
+  });
+});
+
 app.get("/heavy", (req, res) => {
   // Simulate CPU-heavy work (we'll use this later for autoscaling)
   let sum = 0;
