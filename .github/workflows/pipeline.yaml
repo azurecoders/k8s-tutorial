@@ -70,7 +70,7 @@ jobs:
         run: |
           echo "Updating deployment..."
           kubectl set image deployment/myapp \
-            myapp=ghcr.io/${{ github.repository }}/myapp:${{ github.event.workflow_run.head_sha}} \
+            myapp=ghcr.io/${{ github.repository }}/myapp:${{ github.sha }} \
             -n myapp-prod
 
           echo "Waiting for rollout"
