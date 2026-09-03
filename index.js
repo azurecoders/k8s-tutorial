@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORTS || 3000;
 const APP_NAME = process.env.APP_NAME || "MyApp";
 const ENV = process.env.ENV || "development";
 
