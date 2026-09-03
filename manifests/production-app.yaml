@@ -131,7 +131,7 @@ spec:
       containers:
         - name: myapp
           image: myapp:3.0
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               cpu: 100m
