@@ -1,4 +1,6 @@
 const express = require("express");
+const jest = require("jest");
+const request = require("supertest");
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -22,6 +24,24 @@ app.get("/heavy", (req, res) => {
   let sum = 0;
   for (let i = 0; i < 50000000; i++) sum += i;
   res.json({ result: sum });
+});
+
+describe("API Tests", () => {
+  it("GET / should return app info", async () => {
+    const res = await request(app).get("/");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.status).toBe("ok");
+  });
+
+  it("GET /health should return 200", async () => {
+    const res = await request(app).get("/health");
+    expect(res.statusCode).toBe(200);
+  });
+
+  it("GET /ready should return 200", async () => {
+    const res = await request(app).get("/ready");
+    expect(res.statusCode).toBe(200);
+  });
 });
 
 app.listen(PORT, () => {
