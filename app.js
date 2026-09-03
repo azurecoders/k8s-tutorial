@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 
 app.get("/health", (req, res) => res.json({ status: "healthy" }));
 app.get("/ready", (req, res) => res.json({ status: "ready" }));
-app.get("/version", (req, res) => res.json({ version: "v4" }));
+app.get("/version", (req, res) => res.json({ version: "v6" }));
 
 app.get("/heavy", (req, res) => {
   let sum = 0;
