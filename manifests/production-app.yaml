@@ -113,6 +113,13 @@ spec:
       initContainers:
         - name: wait-for-deps
           image: busybox
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "16Mi"
+            limits:
+              cpu: "100m"
+              memory: "32Mi"
           command:
             - sh
             - -c
