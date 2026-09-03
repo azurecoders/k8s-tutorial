@@ -23,7 +23,7 @@ jobs:
           minikube status
 
           kubectl set image deployment/myapp \
-            myapp=ghcr.io/${{ github.repository }}/myapp:${{ github.sha }} \
+            myapp=ghcr.io/${{ github.repository }}/myapp:${{ github.event.workflow_run.head_sha }} \
             -n myapp-prod
 
           kubectl rollout status deployment/myapp -n myapp-prod --timeout=120s
