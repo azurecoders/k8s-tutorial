@@ -5,23 +5,23 @@ metadata:
   namespace: development
 spec:
   containers:
-  - name: writer
-    image: busybox
-    command: ['sh', '-c']
-    args:
-      - |
-        if [ -f /data/message.txt ]; then
-          echo "Existing data found:"
-          cat /data/message.txt
-        else
-          echo "Written at $(date)" > /data/message.txt
-          echo "Pod hostname $(hostname)" >> /data/message.txt
-          echo "New Data written! Sleeping..."
-        fi
-          sleep 3600
-    volumeMounts:
-      - name: my-storage
-        mountPath: /data
+    - name: writer
+      image: busybox
+      command: ["sh", "-c"]
+      args:
+        - |
+          if [ -f /data/message.txt ]; then
+            echo "Existing data found:"
+            cat /data/message.txt
+          else
+            echo "Written at $(date)" > /data/message.txt
+            echo "Pod hostname $(hostname)" >> /data/message.txt
+            echo "New Data written! Sleeping..."
+          fi
+            sleep 3600
+      volumeMounts:
+        - name: my-storage
+          mountPath: /data
   volumes:
     - name: my-storage
       persistentVolumeClaim:
